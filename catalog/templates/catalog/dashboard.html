@@ -1,0 +1,48 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Product Dashboard</h1>
+    <form class="form-inline mb-3" method="get">
+        <input class="form-control mr-2" type="text" name="search" placeholder="Search by name or category">
+        <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+    <a class="btn btn-success mb-3" href="{% url 'add_product' %}">Add Product</a>
+    <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Image</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ forloop.counter }}</td> 
+                <td>{{ product.name }}</td>
+                <td>
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 100px; max-height: 100px;">
+                    {% else %}
+                    No Image
+                    {% endif %}
+                </td>
+                <td>{{ product.category }}</td>
+                <td>{{ product.description }}</td>
+                <td>
+                    <a class="btn btn-warning btn-sm" href="{% url 'edit_product' product.id %}">Edit</a>
+                    <form method="post" action="{% url 'delete_product' product.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
