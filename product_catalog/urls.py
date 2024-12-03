@@ -16,6 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
+
+"""
+This file defines the URL routing for the Django project.
+
+Routes:
+- Admin route: Provides access to the admin interface.
+- Login route: Redirects unauthenticated users to the login page.
+- Logout route: Logs out users and redirects them to the login page.
+- Catalog app route: Includes all URLs related to the catalog app.
+"""
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,8 +35,5 @@ urlpatterns = [
     path('accounts/logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
     path('catalog/', include('catalog.urls')),
 ]  
-
-from django.conf import settings
-from django.conf.urls.static import static
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

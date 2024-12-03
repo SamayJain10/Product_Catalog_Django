@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Product, Category
+from django.db.models import Q
+from .models import Product
 from .forms import ProductForm
 
 """
@@ -18,9 +19,13 @@ from .forms import ProductForm
 @login_required
 def dashboard(request):
     products = Product.objects.all()
-    query = request.GET.get('search', '')
+    query = request.GET.get('search', '').strip()
     if query:
-        products = products.filter(name__icontains=query) | products.filter(category__name__icontains=query)
+        products = products.filter(
+            Q(name__icontains=query) |
+            Q(category__name__icontains=query) |
+            Q(description__icontains=query)
+        )
     return render(request, 'catalog/dashboard.html', {'products': products})
 
 
